@@ -1,27 +1,44 @@
-# angularjs-webpack-boilerplate
+# FormsBuilder Angular Elements Conversion
+
 #### Overview
-The goal of this project is to provide boilerplate code that would be useful for creating a new web application with AngularJS (1.7) and webpack (4.41). Examples are provided to illustrate best practices for structuring a component-based workflow. 
 
-Shout out to [angular/angular-seed](https://github.com/angular/angular-seed) and [orizen/echoes](https://github.com/orizens/echoes) for inspiration. 
+The goal of this project is to convert existing angular project into Web Components.
 
-Features include:
-- ES6 support with Babel
-- Routing with `ui-router`
-- XHR requests with `angular-local-storage` for local storage caching
-- Separate webpack builds for development/production (with linting, minification, and source maps)
-- Themeable styling with Sass; includes icon font (`foundation-icons`)
+**Potential bottlenecks (most common issues):**
+
+- `Change Detection Strategy` (*disable automatic change detection global level It requires quite amount of work to explicitly command the component when to rerende*r)
+- `Style source` (_how to import not from global level or enable the View encapsulation Native or put it in a wrapper w/ a bit of unorthodox way of setting up the source styles but not yet possible for material theme CSS_)
+- `Debugging` (_how preserve Typescript source file_)
+
+- `Routing` (_How to use Routing in Angular Web Components_)
+
+- `Null Injector` (_It requires quite a bit of manual work and wiring-up_)
 
 #### Development guidelines
-Guidelines specific to module/dependency system in AngularJS:
-- **Services** may be registered on **component modules**
-- **Component modules** may have other **component modules** as dependencies
-- **View modules** may have **component modules** as dependencies
-- The **app** module may have **view modules** and persistent **component modules** (components at the same level as ui-router's `<ui-view>` in public/index.html which don't change based on route e.g., navigation menus) as dependencies
+
+Guidelines specific to modules/components in Converting Angular to Web components a web standard for defining new HTML components in a framework-agnostic manner:
+
+- **Component Elements** registered on **AppModule** `ngDoBootstrap`
+
+      ngDoBootstrap() {
+
+      const  elements:  any[] = [[FormBuilderComponent, 'form-builder'], [ParentsComponent, 'parents-components']];
+
+
+         for (const [component, name] of  elements) {
+
+      	        const  elem  =  createCustomElement(component, { injector: this.injector });
+
+      	        customElements.define(name, elem);
+      	    }
+      }
 
 #### Instructions
 
-- Start a new project without the repository's commit history:
-`git clone --depth=1 https://github.com/j3k2/angularjs-webpack-boilerplate.git <your-project-name>`
+- Run command:
+
 - `npm install` to install dependencies
-- `npm run start` to start app on development server (localhost:8080)
-- `npm run build` to generate production build in public/ directory.
+
+- `ng serve ` to start app on development server (localhost:4200) for source-mapping
+
+- `npm run build:formBuilderElements` to generate single Javascript Bundle as element.js.
